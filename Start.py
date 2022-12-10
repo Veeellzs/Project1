@@ -43,9 +43,9 @@ pygame.display.set_caption('Game')
 def generate(X,Y):   #генерация встречных машин
     z = random.randint(1,5)    #количество машин
     C = list(range(1, z + 1))  # выбор полосы
-    random.shuffle(C)   #
+    random.shuffle(C)   # чтобы цифры не повторялись
     for i in range (z):
-        if C[i] == 1:
+        if C[i] == 1:   # ставим машинки по полосам
             Y[i] = 90
         elif C[i] ==2:
             Y[i] = 200
@@ -58,7 +58,7 @@ def generate(X,Y):   #генерация встречных машин
         elif C[i] == 6:
             Y[i] = 700
         for j in range(z):
-            X[j] = random.randint(1,240)
+            X[j] = random.randint(1,240)   #разные X-координаты
 #       P = [0] * z
         return (X,Y,z)
 
@@ -68,7 +68,7 @@ while run:
     X, Y, z = generate(X, Y)
     screen.blit(background_image, (0, 0))
 
-    for i in range(z):
+    for i in range(z):   #задаем неуправляемое движение для (тут, вероятнее всего, ошибка)
         C1 = random.randint(1,6)
         if C1 == 1:
             X[i] += speed * stepLeft
