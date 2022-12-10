@@ -1,3 +1,4 @@
+import os.path
 import pygame, random
 pygame.init()
 from pygame.color import THECOLORS
@@ -21,14 +22,22 @@ Y = [0] * 6   #Y-координата для встречной машины
 P = [0]*2     #список для машин
 
 # загрузка спрайтов
-prize = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\free-png.ru-52-340x340.png")
-car1 = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\бмв.png")
-carA = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\красная.png")
-carB = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\зеленая.png")
-carC = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\желтая.png")
-carD = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\розовая.png")
-carE = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\серая.png")
-background_image = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\yol.png")
+# prize = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\free-png.ru-52-340x340.png")
+# car1 = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\бмв.png")
+# carA = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\красная.png")
+# carB = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\зеленая.png")
+# carC = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\желтая.png")
+# carD = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\розовая.png")
+# carE = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\серая.png")
+# background_image = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\yol.png")
+prize = pygame.image.load(os.path.join("./рисунки/free-png.ru-52-340x340.png"))
+car1 = pygame.image.load(os.path.join("./рисунки/бмв.png"))
+carA = pygame.image.load(os.path.join("./рисунки/красная.png"))
+carB = pygame.image.load(os.path.join("./рисунки/зеленая.png"))
+carC = pygame.image.load(os.path.join("./рисунки/розовая.png"))
+carD = pygame.image.load(os.path.join("./рисунки/желтая.png"))
+carE = pygame.image.load(os.path.join("./рисунки/серая.png"))
+background_image = pygame.image.load(os.path.join("./рисунки/yol.png"))
 pygame.display.set_caption('Game')
 
 # def move_r(player_y, h, step):   #движение машинки (не надо пока)
