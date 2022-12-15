@@ -3,6 +3,8 @@ import pygame, random
 pygame.init()
 from pygame.color import THECOLORS
 
+#pygame.mixer.music.load(r"C:\Users\User\Desktop\для проекта\zvuki-na-ulice-goroda.mp3") #звук
+
 screenX = 880
 screenY = 700
 screen = pygame.display.set_mode([screenX, screenY])
