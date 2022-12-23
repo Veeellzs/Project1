@@ -18,11 +18,10 @@ game_over = False   # проигрыш и экран смерти
 player_sprite = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\бмв.png")
 background_image = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\yol.png")
 gameover = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\d55285388e843b575b4b89986ad65ef2.png")
-winner = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\victory.png")
 prizeSprite = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\free-png.ru-52-340x340.png")
 
 FPS = 60  # кол - во тиков цикла / кадров в секунду
-TICKER_MAX_COUNT = FPS * 4  # tick count will be set to 0 every 4th second
+TICKER_MAX_COUNT = FPS * 60 * 4  # tick count will be set to 0 every 3rd minute
 CAR_STEP = 1   # шаг встречной машинки за один тик цикла
 speed = 3   # множитель скорости / сложность
 
@@ -71,8 +70,20 @@ carsX = []   # список Х - координат встречных маши�
 carsY = []   # список У - координат встречных машинок
 carsSprite = []   # список спрайтов встречных машинок
 
-prizeX = screenX - 20
-prizeY = get_random_lane()   # выбираем случайную линию для приза
+prizeX = []
+prizeY = []
+prizeX.append(screenX - 20)
+prizeY.append(get_random_lane())   # выбираем случайную линию для приза
+prizeSprites = []
+def append_random_prize(prizeX, prizeY, prizeSprites):
+    x = screenX + random.randint(0, 200) if len(prizeX) > 0 else screenX
+    prizeX.append(int(x))
+    prizeY.append(int(get_random_lane()))
+    prizeSprites.append(prizeSprite)
+    return (prizeX,prizeY, prizeSprites)
+
+
+
 
 def append_random_car(carsX,carsY,carsSprite):   # выбираем случайную X - координату для встречной машинки
 
@@ -85,23 +96,19 @@ def append_random_car(carsX,carsY,carsSprite):   # выбираем случай
 
 def crash(yr,player_x, carsX, carsY, game_over):   # столкновение
     for i in range(len(carsY)):
-        if carsX[i] < player_x + 120 and carsX[i] > player_x and yr == carsY[i]:
+        if player_x + 135 == carsX[i] and yr == carsY[i]:
             game_over  = True
     return game_over
 
 count= 0
 
-def crash_prize(player_x, yr, prizeX, prizeY, count, carsX, carsY): # собираем монетки
-    if prizeX < player_x + 120 and prizeX > player_x and yr == prizeY:
-        count += 1
-        prizeX = screenX
-        prizeY = get_random_lane()
-    elif prizeX < 0:
-        prizeX = screenX + 20
-        prizeY = get_random_lane()
-    for i in range(len(carsY)):
-        while prizeY == carsY[i] and prizeX > carsX[i] - 50:
-            prizeY = get_random_lane()
+def crash_prize(player_x, yr, prizeX, prizeY, count): # собираем монетки
+    for i in range (len(prizeX)):
+        if prizeX[i] < player_x + 120 and yr == prizeY:
+            count += 1
+            prizeX.pop(i)
+            prizeY.pop(i)
+            prizeSprites.pop(i)
     return prizeX, prizeY, count
 
 my_font = pygame.font.SysFont("Calibri", 40, bold=False, italic=False)
@@ -115,53 +122,10 @@ def death(gameover,text1):
     run = False
     return run
 
-timerSeconds1 = 0
-stopcount = 0
-speed_text1 = 'l'
-def speedy(speed, count,timerSeconds1, stopcount, TICKER_MAX_COUNT, speed_text1):
-    if timerSeconds1 % 600 == 0:
-        speed += 1
-        speed_text1 = my_font.render("Ускорение", True, THECOLORS['black'])
-    if timerSeconds1 % 900 == 0:
-        if TICKER_MAX_COUNT > 30:
-            TICKER_MAX_COUNT -= 20
-            print(TICKER_MAX_COUNT)
-    if count > 0 and count % 5 == 0 and count != stopcount:
-        speed -= 1
-        speed_text1 = my_font.render("Замедление", True, THECOLORS['black'])
-        stopcount = count
-    return speed, count, stopcount, TICKER_MAX_COUNT, speed_text1
-
-
-def win(count, run):
-    screen.blit(winner,[0,0])
-    pygame.display.flip()
-    pygame.time.delay(3000)
-    run = False
-    return run
-
-
-timerSeconds2 = 0
-Seconds = 0
-Minutes = 0
-def timers(timerSeconds2, Seconds, Minutes):
-    if timerSeconds2 == 60:
-        if Seconds < 60:
-            Seconds += 1
-        else:
-            Seconds = 0
-            Minutes += 1
-        if Minutes == 60:
-            Minutes = 0
-        timerSeconds2 = 0
-    return Seconds, Minutes, timerSeconds2
-
-
-
-
 
 clock = pygame.time.Clock()
 timerSeconds = 0
+timerSeconds1 = 0
 
 # append_random_car()
 
@@ -172,24 +136,22 @@ while run == True:
 
     clock.tick(FPS)
 
-    timerSeconds1 += 1
-    timerSeconds2 += 1
+    if timerSeconds1 < FPS * 3:
+        timerSeconds1 += 1
+    else:
+        timerSeconds1 = 1
 
-    if timerSeconds <= TICKER_MAX_COUNT:
+    if timerSeconds < TICKER_MAX_COUNT:
         timerSeconds += 1
     else:
         timerSeconds = 1
 
-    if timerSeconds % (TICKER_MAX_COUNT) == 0:   # добавляем встречные машины каждые N секунды
+    if timerSeconds % (FPS * 4) == 0:   # добавляем встречные машины каждые 4 секунды
         kolvo = random.randint(1,5)
         for i in range(1,kolvo+1):
             carsX,carsY,carsSprite = append_random_car(carsX,carsY,carsSprite)
 
     carsIndexesToDelete = []  # массив для удаления лишних машинок
-
-
-
-    speed, count, stopcount, TICKER_MAX_COUNT, speed_text1 = speedy(speed, count, timerSeconds1, stopcount, TICKER_MAX_COUNT, speed_text1)
 
     for i in range(len(carsX)):
         carsX[i] -= CAR_STEP * speed
@@ -205,23 +167,16 @@ while run == True:
         del carsY[i]
         del carsSprite[i]
 
-    prizeX -= CAR_STEP * speed
-    prizeX, prizeY, count = crash_prize(player_x, yr, prizeX, prizeY, count, carsX, carsY)
-    screen.blit(prizeSprite, (prizeX, prizeY))
+    if timerSeconds1 == 179:
+        prizeX, prizeY, prizeSprites = append_random_prize(prizeX,prizeY, prizeSprites)
+    for i in range(len(prizeX)-1):
+        prizeX[i] -= CAR_STEP * speed
+        prizeX[i], prizeY[i], count = crash_prize(player_x, yr, prizeX, prizeY, count)
+        screen.blit(prizeSprites[i], (prizeX[i], prizeY[i]))
 
 
     text_count = my_font.render("Счет:" + str(count), True, THECOLORS['black'])
     screen.blit(text_count, [20, 30])
-
-
-    Seconds, Minutes, timerSeconds2 = timers(timerSeconds2, Seconds, Minutes)
-    timer_text =my_font.render(str(Minutes) + ":" + str(Seconds), True, THECOLORS['black'])
-    screen.blit(timer_text, [800, 30])
-
-    # screen.blit(speed_text1, [430, 30])   # не работает, 1st argument must be surface, not str
-
-    if count >= 50:
-        run = win(count, run)
 
     game_over = crash(yr, player_x, carsX, carsY, game_over)
     if game_over == True:
@@ -233,6 +188,8 @@ while run == True:
         elif event.type == pygame.KEYDOWN:
             yr = move_r(yr, h, step)
     screen.blit(player_sprite, (player_x, yr))
+
+
 
     pygame.display.flip()
 
