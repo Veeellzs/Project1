@@ -91,7 +91,7 @@ def crash(yr,player_x, carsX, carsY, game_over):   # столкновение
 
 count = 0
 
-def crash_prize(player_x, yr, prizeX, prizeY, count):
+def crash_prize(player_x, yr, prizeX, prizeY, count): #регенерация монетки
     if player_x + 135 == prizeX and yr == prizeY:
         count += 1
         prizeX = - 200
@@ -101,7 +101,7 @@ def crash_prize(player_x, yr, prizeX, prizeY, count):
 my_font = pygame.font.SysFont("Calibri", 40, bold=False, italic=False)
 text1 = my_font.render('Подождите для возвращения в меню',True, THECOLORS['white'])
 
-def death(gameover,text1):
+def death(gameover,text1):    #смерть
     screen.blit(gameover,[100,80])
     screen.blit(text1,[100, 500])
     pygame.display.flip()

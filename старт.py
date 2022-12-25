@@ -1,3 +1,5 @@
+import os.path
+
 import pygame, random, time
 pygame.init()
 from pygame.color import THECOLORS
@@ -8,6 +10,8 @@ screen = pygame.display.set_mode([screenX, screenY])
 pygame.display.set_caption("My game")
 
 
+def load_sprite(path):
+    return pygame.image.load(os.path.join(path))
 
 step = 100  # шаг / смещение на 1 полосу   (93)
 h = 120  # высота машинки игрока
@@ -15,11 +19,11 @@ yr = 400  # Y-координата для машинки игрока   (360)   
 player_x = 0   # х - координата игрока
 game_over = False   # проигрыш и экран смерти
 
-player_sprite = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\бмв.png")
-background_image = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\yol.png")
-gameover = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\d55285388e843b575b4b89986ad65ef2.png")
-winner = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\victory.png")
-prizeSprite = pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\free-png.ru-52-340x340.png")
+player_sprite = load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\бмв.png")
+background_image = load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\yol.png")
+gameover = load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\d55285388e843b575b4b89986ad65ef2.png")
+winner = load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\victory.png")
+prizeSprite = load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\free-png.ru-52-340x340.png")
 
 FPS = 60  # кол - во тиков цикла / кадров в секунду
 TICKER_MAX_COUNT = FPS * 4  # tick count will be set to 0 every 4th second
@@ -27,11 +31,11 @@ CAR_STEP = 1   # шаг встречной машинки за один тик �
 speed = 3   # множитель скорости / сложность
 
 carSprites = [
-    pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\серая.png"),   # список спрайтов
-    pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\GreenCar.png"),
-    pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\желтая.png"),
-    pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\розовая.png"),
-    pygame.image.load(r"C:\Users\User\Desktop\для проекта\рисунки\красная.png")]
+    load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\серая.png"),   # список спрайтов
+    load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\GreenCar.png"),
+    load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\желтая.png"),
+    load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\розовая.png"),
+    load_sprite(r"C:\Users\User\Desktop\для проекта\рисунки\красная.png")]
 
 def move_r(yr, h, step):  # управляемое движение машинки
     if event.key == pygame.K_UP:
