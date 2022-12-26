@@ -78,18 +78,29 @@ carsSprite = []   # список спрайтов встречных машин�
 prizeX = screenX - 20
 prizeY = get_random_lane()   # выбираем случайную линию для приза
 
+BUSY_LANES = [] # список занятых линий
+
+def busy(BUSY_LANES):
+    a = get_random_lane()
+
+    for i in range(len(BUSY_LANES)):
+        while a == BUSY_LANES[i]:
+            a = get_random_lane
+    BUSY_LANES.append(a)
+    return (a)
+
 def append_random_car(carsX,carsY,carsSprite):   # выбираем случайную X - координату для встречной машинки
 
     x = screenX + random.randint(0, 200) if len(carsX) > 0 else screenX
 
     carsX.append(x)
-    carsY.append(get_random_lane())
+    carsY.append(busy(BUSY_LANES))
     carsSprite.append(load_random_car_sprite())    # добавляем в списки данные
     return (carsX,carsY,carsSprite)
 
 def crash(yr,player_x, carsX, carsY, game_over):   # столкновение
     for i in range(len(carsY)):
-        if carsX[i] < player_x + 120 and carsX[i] > player_x - 100 and yr == carsY[i]:
+        if carsX[i] < player_x + 120 and carsX[i] > player_x - 120 and yr == carsY[i]:
             game_over = True
     return game_over
 
@@ -100,15 +111,18 @@ def crash_prize(player_x, yr, prizeX, prizeY, count, carsX, carsY): # собир
         count += 1
         prizeX = screenX
         prizeY = get_random_lane()
+        for i in range(len(carsY)): #делаем проверку чтобы монетка не накладывалась на машинки
+            while prizeY == carsY[i] and prizeX > carsX[i] - 50:
+                prizeY = get_random_lane()
     elif prizeX < 0:
         prizeX = screenX + 20
         prizeY = get_random_lane()
-    for i in range(len(carsY)): #делаем проверку чтобы монетка не накладывалась на машинки
-        while prizeY == carsY[i] and prizeX > carsX[i] - 50:
-            prizeY = get_random_lane()
+        for i in range(len(carsY)): #делаем проверку чтобы монетка не накладывалась на машинки
+            while prizeY == carsY[i] and prizeX > carsX[i] - 50:
+                prizeY = get_random_lane()
     return prizeX, prizeY, count
 
-BUSY_LANES = [] # список занятых линий
+
 
 
 
@@ -125,20 +139,20 @@ def death(gameover,text1):
 
 timerSeconds1 = 0
 stopcount = 0
-# speed_text1 = 'l'
-def speedy(speed, count,timerSeconds1, stopcount, TICKER_MAX_COUNT): #сложность, ускорение
+speed_text1 = 'l'
+def speedy(speed, count,timerSeconds1, stopcount, TICKER_MAX_COUNT, speed_text1): #сложность, ускорение
     if timerSeconds1 % 600 == 0:
         speed += 1
-        # speed_text1 = my_font.render("Ускорение", True, THECOLORS['black'])
+        speed_text1 = my_font.render("Ускорение", True, THECOLORS['black'])
     if timerSeconds1 % 900 == 0:
         if TICKER_MAX_COUNT > 60:
-            TICKER_MAX_COUNT -= 20
+            TICKER_MAX_COUNT -= 30
             print(TICKER_MAX_COUNT)
     if count > 0 and count % 5 == 0 and count != stopcount:
         speed -= 1
-        # speed_text1 = my_font.render("Замедление", True, THECOLORS['black'])
+        speed_text1 = my_font.render("Замедление", True, THECOLORS['black'])
         stopcount = count
-    return speed, count, stopcount, TICKER_MAX_COUNT
+    return speed, count, stopcount, TICKER_MAX_COUNT, speed_text1
 
 
 def win(count, run): # победа
@@ -192,12 +206,13 @@ while run == True:
         kolvo = random.randint(1,5)
         for i in range(1,kolvo+1):
             carsX,carsY,carsSprite = append_random_car(carsX,carsY,carsSprite)
+        BUSY_LANES.clear()
 
     carsIndexesToDelete = []  # массив для удаления лишних машинок
 
 
 
-    speed, count, stopcount, TICKER_MAX_COUNT = speedy(speed, count, timerSeconds1, stopcount, TICKER_MAX_COUNT)
+    speed, count, stopcount, TICKER_MAX_COUNT, speed_text1 = speedy(speed, count, timerSeconds1, stopcount, TICKER_MAX_COUNT, speed_text1)
 
     for i in range(len(carsX)):
         carsX[i] -= CAR_STEP * speed
@@ -208,7 +223,7 @@ while run == True:
 
 
 
-    for i in reversed (carsIndexesToDelete):   # удаляем из каждого списка данные для проехавших машинок
+    for i in carsIndexesToDelete:   # удаляем из каждого списка данные для проехавших машинок
         del carsX[i]
         del carsY[i]
         del carsSprite[i]

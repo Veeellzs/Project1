@@ -1,4 +1,4 @@
-import pygame, Rules, AboutGonka,   #, Game
+import pygame, Rules, AboutGonka #, Game
 pygame.init()
 from pygame.color import THECOLORS
 left = 420
